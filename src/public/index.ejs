@@ -115,7 +115,7 @@
 
         function Delete(id, fn, ln) {
             
-            if (confirm(`Are you sure you want delete ${fn} ${ln}?`)) {
+            if (confirm(`Are you sure you want to delete ${fn} ${ln}?`)) {
                 fetch(`/user/${id}`, {
                     method: 'DELETE'
                 }).then(response => {
