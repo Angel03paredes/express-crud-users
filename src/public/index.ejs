@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/materia/bootstrap.min.css"
+        integrity="sha384-B4morbeopVCSpzeC1c4nyV0d0cqvlSAfyXVfrPJa25im5p+yEN/YmhlgQP/OyMZD" crossorigin="anonymous">
+    <title>Home</title>
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-dark bg-dark shadow">
+        <div class="container">
+            <a href="#!" class="navbar-brand"> Users </a>
+            <div style="font-size: 1rem;">
+                <a href="/" class="text-light"> Home </a> <i class="ml-2 mr-2 text-light">/</i>
+                <a href="about" class="text-light" style="font-size: 1rem;"> About</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4 container">
+                <form class="card p-5" id="form" action="/user" method="POST">
+                    <h2>Formulario</h2>
+                    <div class="form-group">
+                        
+                        <input type="text" name="first_name" id="first_name" class="form-control" placeholder="Enter your first name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Enter your last name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="country" id="country" class="form-control" placeholder="Enter your country">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email">
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Save">
+                </form>
+            </div>
+            <div class="col-md-8">
+
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+
+                            <th>
+                                Fisrt Name
+                            </th>
+                            <th>
+                                Last Name
+                            </th>
+                            <th>
+                                Contry
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% if(users){ %>
+                            <% for (let item of users){ %>
+                                <tr>
+                                    <td>
+                                        <%= item.first_name %>
+                                    </td>
+                                    <td>
+                                        <%= item.last_name %>
+                                    </td>
+                                    <td>
+                                        <%= item.country %>
+                                    </td>
+                                    <td>
+                                        <%= item.email %>
+                                    </td>
+                                    <td>
+                                        <button
+                                            onclick="Delete('<%= item.id %>','<%= item.first_name %>','<%= item.last_name %>')"
+                                            class="btn btn-danger btn-sm">Delete</button>
+                                        <button onclick="PrepareUpdate('<%= item.id %>','<%= item.first_name %>','<%= item.last_name %>','<%= item.country %>','<%= item.email %>')"
+                                            class="btn btn-secondary btn-sm">Update</button>
+                                    </td>
+                                </tr>
+                                <% } %>
+                                    <% } %>
+
+
+                    </tbody>
+
+                </table>
+                <% if(!users || users.length==0){ %>
+                    <h3>Users not found</h3>
+                    <% } %>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        var isUpdate = false;
+        var user = {};
+
+
+        function Delete(id, fn, ln) {
+            
+            if (confirm(`Are you sure you want delete ${fn} ${ln}?`)) {
+                fetch(`/user/${id}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    location.reload()
+                })
+            }
+
+        }
+
+        function PrepareUpdate(id, fn, ln,country,email){
+            user.id = id;
+            user.first_name = fn;
+            user.last_name = ln,
+            user.email = email;
+            user.country = country;
+            const form = document.getElementById('form');
+            form.method = 'POST';
+            form.action = `/user/${id}`
+            document.getElementById('first_name').value = fn
+            document.getElementById('last_name').value = ln
+            document.getElementById('country').value = country
+            document.getElementById('email').value = email
+        }
+
+        
+
+    </script>
+</body>
+
+</html>
